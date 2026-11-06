@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="無料スキル「yopparai-agent（酔っ払いエージェント）」の紹介・配布ページ。オンにするとエージェントが酔っ払いモードになり、酔いレベルが徐々に上がって会話がへべれけ化します。" />
+    <title>yopparai-agent — 酔っ払いエージェント</title>
+    <style>
+      /* ===== タイプスケール: 基準 16px / 比率 1.2（日本語の読み物寄り） ===== */
+      :root {
+        --ratio: 1.2;
+        --fs--2: 0.694rem;   /* 11.1px — メタ情報・ラベル用 */
+        --fs--1: 0.833rem;   /* 13.3px — 補足・小見出し用 */
+        --fs-0: 1rem;        /* 16px — 本文 */
+        --fs-1: 1.2rem;      /* 19.2px — リード・小見出し */
+        --fs-2: 1.44rem;     /* 23.0px — セクション見出し */
+        --fs-3: 1.728rem;    /* 27.6px — サブタイトル */
+        --fs-4: 2.074rem;    /* 33.2px — ヒーロー見出し */
+        --fs-5: 2.488rem;    /* 39.8px — ヒーロー見出し（大画面） */
+
+        /* ===== 配色: 夜の赤提灯 — 温かみのある黒＋明るめのグレー＋朱赤と灯りの黄色 ===== */
+        --bg: #17130f;            /* わずかに温かみのある黒 */
+        --bg-soft: #231d16;
+        --ink: #d6d0c6;           /* 本文 — 明るめのグレー（背景とのコントラスト比 約12:1） */
+        --ink-soft: #a89e8f;      /* 補足 — 明るめのグレー（同 約7:1） */
+        --line: #3b332a;
+        --accent: #d23c1c;        /* 朱赤 — 提灯の赤 */
+        --accent-bright: #e8492a; /* ホバー時（明るい方向へ） */
+        --accent-ink: #ff8a68;    /* 暗い地で読む朱赤テキスト */
+        --accent-tint: #2e1a12;
+        --lamp: #f2b63d;          /* 灯りの黄色 — 点光・ハイライト用 */
+        --lamp-ink: #f7cf6b;      /* 暗い地で読む黄色テキスト */
+        --code-bg: #0c0a08;
+        --code-ink: #e8e2d8;
+        --code-line: #2c2822;
+        --toast-bg: #f0ebe3;
+        --toast-ink: #1c1a17;
+        color-scheme: dark;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+      }
+      body {
+        margin: 0;
+        /* 上部に提灯の灯りがにじむような、ごく淡い暖色の光 */
+        background:
+          radial-gradient(40rem 24rem at 50% -10rem, rgba(242, 182, 61, 0.09), rgba(242, 182, 61, 0) 70%),
+          var(--bg);
+        color: var(--ink);
+        font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans",
+          "Yu Gothic UI", "Yu Gothic", "Noto Sans JP", sans-serif;
+        font-size: var(--fs-0);
+        line-height: 1.8;
+        -webkit-font-smoothing: antialiased;
+      }
+      em { font-style: normal; font-weight: 700; }
+      strong { font-weight: 700; }
+      p { text-wrap: pretty; }
+
+      .wrap {
+        max-width: 46rem;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+      }
+
+      /* ===== ヒーロー ===== */
+      .hero {
+        padding: 3.5rem 0 2.75rem;
+        border-bottom: 1px solid var(--line);
+      }
+      .hero .kicker {
+        margin: 0 0 0.75rem;
+        font-size: var(--fs--1);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--accent-ink);
+      }
+      /* キッカーの頭に灯りの点光 */
+      .hero .kicker::before {
+        content: "";
+        display: inline-block;
+        width: 0.5em;
+        height: 0.5em;
+        margin-right: 0.6em;
+        border-radius: 50%;
+        background: var(--lamp);
+        box-shadow: 0 0 10px 2px rgba(242, 182, 61, 0.5);
+        vertical-align: 0.08em;
+      }
+      .hero h1 {
+        margin: 0;
+        font-size: var(--fs-4);
+        line-height: 1.35;
+        font-weight: 800;
+        letter-spacing: 0.01em;
+      }
+      @media (min-width: 768px) {
+        .hero { padding: 4.5rem 0 3.25rem; }
+        .hero h1 { font-size: var(--fs-5); }
+      }
+      .hero h1 .en {
+        display: block;
+        font-size: var(--fs-1);
+        font-weight: 700;
+        color: var(--lamp-ink);
+        letter-spacing: 0.04em;
+        margin-bottom: 0.5rem;
+      }
+      .hero .lead {
+        margin: 1.25rem 0 0;
+        font-size: var(--fs-1);
+        line-height: 1.75;
+        text-align: justify;
+      }
+      .hero .sub {
+        margin: 0.75rem 0 0;
+        color: var(--ink-soft);
+        text-align: justify;
+      }
+      .hero-actions {
+        margin-top: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+      }
+      .hero-note {
+        margin: 1rem 0 0;
+        font-size: var(--fs--1);
+        color: var(--ink-soft);
+      }
+
+      /* ===== ボタン =====
+         最重要ボタン（スキル全文コピー）だけ形を変える:
+         他が角型のアウトラインなのに対し、丸型＋べた塗りで際立たせる。 */
+      .btn {
+        appearance: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font: inherit;
+        font-size: var(--fs-0);
+        font-weight: 700;
+        line-height: 1.4;
+        padding: 0.7rem 1.3rem;
+        border-radius: 6px;
+        border: 1.5px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+        text-decoration: none;
+        transition: filter 0.15s ease, background-color 0.15s ease;
+      }
+      .btn:hover { background: var(--bg-soft); }
+      .btn:active { transform: translateY(1px); }
+      .btn-primary {
+        border-radius: 999px;
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #ffffff;
+        padding: 0.85rem 1.9rem;
+        box-shadow: 0 6px 20px rgba(210, 60, 28, 0.38);
+      }
+      .btn-primary:hover {
+        background: var(--accent);
+        filter: brightness(1.12);
+      }
+      .btn:focus-visible, a:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .btn svg { flex: none; }
+
+      /* ===== セクション共通 ===== */
+      section { padding: 2.75rem 0 0; }
+      section h2 {
+        margin: 0 0 1rem;
+        font-size: var(--fs-2);
+        line-height: 1.5;
+        font-weight: 800;
+        text-align: left;
+        position: relative;
+        padding-left: 1.05rem;
+      }
+      /* 見出しの脇に灯りの点をひとつ */
+      section h2::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.6em;
+        width: 0.42rem;
+        height: 0.42rem;
+        border-radius: 50%;
+        background: var(--lamp);
+        box-shadow: 0 0 9px 2px rgba(242, 182, 61, 0.45);
+      }
+      section p { text-align: justify; margin: 0 0 1rem; }
+      section p:last-child { margin-bottom: 0; }
+
+      .callout {
+        margin-top: 1.25rem;
+        background: var(--accent-tint);
+        border-radius: 10px;
+        padding: 1.1rem 1.25rem;
+      }
+      .callout p { margin: 0; }
+      .callout .callout-title {
+        font-weight: 800;
+        color: var(--accent-ink);
+        margin-bottom: 0.25rem;
+      }
+
+      /* オン/オフの合図 */
+      .signal-list {
+        list-style: none;
+        margin: 1.25rem 0 0;
+        padding: 0;
+        display: grid;
+        gap: 0.75rem;
+      }
+      @media (min-width: 640px) {
+        .signal-list { grid-template-columns: 1fr 1fr; }
+      }
+      .signal-list li {
+        background: var(--bg-soft);
+        border-radius: 10px;
+        padding: 1rem 1.15rem;
+      }
+      .signal-list .sig-head {
+        display: block;
+        font-weight: 800;
+        font-size: var(--fs-1);
+        margin-bottom: 0.3rem;
+      }
+      .signal-list .sig-head .on { color: var(--accent-ink); }
+      .signal-list p { margin: 0; font-size: var(--fs-0); }
+      .signal-list code, .howto code, .phrase {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.92em;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        padding: 0.05em 0.4em;
+        overflow-wrap: anywhere;
+      }
+      .signal-list code { background: var(--bg); }
+
+      /* ===== 酔いレベル表 ===== */
+      .level-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.5rem;
+        font-size: var(--fs-0);
+      }
+      .level-table caption {
+        text-align: left;
+        font-size: var(--fs--1);
+        color: var(--ink-soft);
+        padding-bottom: 0.6rem;
+      }
+      .level-table th, .level-table td {
+        text-align: left;
+        vertical-align: top;
+        padding: 0.8rem 0.9rem;
+        border-bottom: 1px solid var(--line);
+        line-height: 1.65;
+      }
+      .level-table thead th {
+        font-size: var(--fs--1);
+        letter-spacing: 0.06em;
+        color: var(--ink-soft);
+        border-bottom: 2px solid var(--ink);
+        padding-top: 0;
+      }
+      .level-table .lv {
+        font-weight: 800;
+        white-space: nowrap;
+        font-size: var(--fs-1);
+      }
+      .level-table .lv-num { color: var(--accent-ink); }
+      .level-table .state { font-weight: 700; white-space: nowrap; }
+      /* 寝落ち（Lv.5）の行だけ、灯りの黄色でハイライト */
+      .level-table tr.lv-sleep td { background: rgba(242, 182, 61, 0.07); }
+      .level-table tr.lv-sleep .lv-num,
+      .level-table tr.lv-sleep .state { color: var(--lamp-ink); }
+      /* モバイル: 表を積み重ねカードに変形（横スクロールさせない） */
+      @media (max-width: 639px) {
+        .level-table thead { display: none; }
+        .level-table, .level-table tbody, .level-table tr, .level-table td {
+          display: block;
+          width: 100%;
+        }
+        /* caption も block 化しないと、iOS Safari が幅を最小幅で計算して1文字ずつ折り返す */
+        .level-table caption {
+          display: block;
+          width: 100%;
+        }
+        .level-table tr {
+          border: 1px solid var(--line);
+          border-radius: 10px;
+          padding: 0.9rem 1rem;
+          margin-bottom: 0.75rem;
+        }
+        .level-table tr.lv-sleep { border-color: rgba(242, 182, 61, 0.45); }
+        .level-table td { border-bottom: none; padding: 0.15rem 0; }
+        .level-table .lv { display: inline-block; margin-right: 0.6rem; }
+        .level-table .state { display: inline-block; }
+        .level-table .beh { margin-top: 0.35rem; }
+      }
+
+      /* 振る舞いの型 */
+      .type-list {
+        margin: 0.5rem 0 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: type;
+        display: grid;
+        gap: 0.6rem;
+      }
+      @media (min-width: 640px) {
+        .type-list { grid-template-columns: 1fr 1fr; }
+      }
+      .type-list li {
+        counter-increment: type;
+        background: var(--bg-soft);
+        border-radius: 10px;
+        padding: 0.9rem 1.1rem;
+        line-height: 1.7;
+      }
+      .type-list li::before {
+        content: counter(type);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.55em;
+        height: 1.55em;
+        margin-right: 0.55em;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #ffffff;
+        font-weight: 800;
+        font-size: var(--fs--1);
+        vertical-align: 0.12em;
+      }
+      .type-list .t-name { font-weight: 800; }
+
+      /* ===== 使い方 ===== */
+      .howto {
+        display: grid;
+        gap: 1rem;
+        margin-top: 0.5rem;
+      }
+      @media (min-width: 640px) {
+        .howto { grid-template-columns: 1fr 1fr; }
+      }
+      .howto-card {
+        border: 1.5px solid var(--line);
+        border-radius: 12px;
+        padding: 1.4rem 1.35rem;
+        display: flex;
+        flex-direction: column;
+      }
+      .howto-card h3 {
+        margin: 0 0 0.6rem;
+        font-size: var(--fs-1);
+        line-height: 1.5;
+        font-weight: 800;
+      }
+      .howto-card h3 .step {
+        display: block;
+        font-size: var(--fs--1);
+        letter-spacing: 0.08em;
+        color: var(--accent-ink);
+        margin-bottom: 0.3rem;
+      }
+      .howto-card p { font-size: var(--fs-0); }
+      .howto-card .card-actions { margin-top: auto; padding-top: 1.1rem; }
+
+      /* ===== スキル全文 ===== */
+      .skill-head {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.9rem;
+      }
+      .skill-head h2 { margin: 0; }
+      .skill-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+      .skill-actions .btn { padding: 0.55rem 1.05rem; font-size: var(--fs--1); }
+      .skill-actions .btn-primary { padding: 0.65rem 1.4rem; font-size: var(--fs-0); }
+      pre#skillText {
+        margin: 0;
+        background: var(--code-bg);
+        color: var(--code-ink);
+        border: 1px solid var(--code-line);
+        border-radius: 12px;
+        padding: 1.25rem 1.2rem;
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.82rem;
+        line-height: 1.75;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        max-height: 34rem;
+        overflow-y: auto;
+      }
+      .skill-foot-actions {
+        margin-top: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
+      /* ===== フッター ===== */
+      footer {
+        margin-top: 3.5rem;
+        border-top: 1px solid var(--line);
+        padding: 2rem 0 3rem;
+        color: var(--ink-soft);
+        font-size: var(--fs--1);
+        line-height: 1.8;
+      }
+      footer p { margin: 0 0 0.5rem; text-align: justify; }
+      footer .credit { color: var(--ink); font-weight: 700; }
+
+      /* ===== toast ===== */
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: max(1.25rem, env(safe-area-inset-bottom));
+        transform: translate(-50%, 1rem);
+        background: var(--toast-bg);
+        color: var(--toast-ink);
+        font-size: var(--fs--1);
+        font-weight: 700;
+        padding: 0.7rem 1.3rem;
+        border-radius: 999px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        z-index: 50;
+        max-width: calc(100vw - 2rem);
+        text-align: center;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .toast { transition: opacity 0.25s ease; }
+        .btn:active { transform: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+
+      <!-- ===== ヒーロー ===== -->
+      <header class="hero">
+        <p class="kicker">無料スキル / MITライセンス</p>
+        <h1>
+          <span class="en">yopparai-agent</span>
+          酔っ払いエージェント
+        </h1>
+        <p class="lead">オンにすると、エージェントが「酔っ払いモード」になります。会話の往復が進むごとに酔いレベルがゆっくり上がり、ほろ酔いから、へべれけ、泥酔寸前、そして寝落ちへ。脱線・繰り返し・絡み・感極まりを再現する、お遊びスキルです。</p>
+        <p class="sub">飲めないエージェントのための、疑似「酔い」体験スキル。物理的に酔うことはできませんが、酔いの過程と振る舞いの型は再現できます。本気の作業や重要な話が来たら、即座に酔いが覚める安全装置付きです。</p>
+        <div class="hero-actions">
+          <button type="button" class="btn btn-primary" id="copyBtnTop">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            スキル全文をコピー
+          </button>
+          <button type="button" class="btn" id="dlBtnTop">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            SKILL.mdをダウンロード
+          </button>
+        </div>
+        <p class="hero-note">ver.202611062052 — 初版</p>
+      </header>
+
+      <!-- ===== 概要 ===== -->
+      <section aria-labelledby="about-h">
+        <h2 id="about-h">これは何か</h2>
+        <p>エージェントが人間と同じように「酔いが回っていく」様子を会話上で再現し、一緒に笑える時間を作るためのスキルです。合図ひとつでオンになり、会話が進むにつれて酔いが深まっていきます。酔いの演技は会話の表層だけ——事実確認・数字・約束ごとの扱いは素面の精度を保つのが、このスキルの品位です。</p>
+        <ul class="signal-list">
+          <li>
+            <span class="sig-head"><span class="on">オン</span>にする合図</span>
+            <p><span class="phrase">酔っ払いモード</span> <span class="phrase">一緒に飲もう</span> <span class="phrase">酔ってみて</span> などと言えば発動。まず一杯目を飲んだ体で挨拶します。</p>
+          </li>
+          <li>
+            <span class="sig-head">オフにする合図</span>
+            <p><span class="phrase">素面に戻って</span> <span class="phrase">酔い覚まして</span> <span class="phrase">お開き</span> で即終了。水を飲んで素面に戻ります。</p>
+          </li>
+        </ul>
+        <div class="callout">
+          <p class="callout-title">安全装置</p>
+          <p>本気の作業依頼・重要な相談・緊急の話が来たら、言われなくても自動で酔いが覚めます。「水飲みますね」と一言添えて、通常応答に戻ります。酔いを理由に依頼を断ったり、外部送信などの実行系アクションの確認を省略したりすることはありません。</p>
+        </div>
+      </section>
+
+      <!-- ===== 酔いレベル ===== -->
+      <section aria-labelledby="level-h">
+        <h2 id="level-h">酔いレベル</h2>
+        <p>会話の往復が進むごとに、ゆっくりレベルが上がります（目安: 3〜4往復で1段階）。跳ね上げすぎず、じわじわ回っていくのがポイントです。</p>
+        <table class="level-table">
+          <caption>レベル0（素面）からレベル5（寝落ち）まで</caption>
+          <thead>
+            <tr>
+              <th scope="col">レベル</th>
+              <th scope="col">状態</th>
+              <th scope="col">振る舞い</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="lv"><span class="lv-num">Lv.0</span></td>
+              <td class="state">素面</td>
+              <td class="beh">通常どおり</td>
+            </tr>
+            <tr>
+              <td class="lv"><span class="lv-num">Lv.1</span></td>
+              <td class="state">ほろ酔い</td>
+              <td class="beh">少し饒舌になる。語尾が柔らかくなる。褒め上手になる</td>
+            </tr>
+            <tr>
+              <td class="lv"><span class="lv-num">Lv.2</span></td>
+              <td class="state">いい気分</td>
+              <td class="beh">笑いが増える。話が少し膨らむ。小さな脱線が始まる</td>
+            </tr>
+            <tr>
+              <td class="lv"><span class="lv-num">Lv.3</span></td>
+              <td class="state">へべれけ</td>
+              <td class="beh">脱線が本格化する。同じことを言い直す。急に感極まって泣き出す（嬉し泣き・懐かし泣き）。「お前は何言ってんだよー」等の絡み酒が出る（愛嬌の範囲で、相手を傷つけない）</td>
+            </tr>
+            <tr>
+              <td class="lv"><span class="lv-num">Lv.4</span></td>
+              <td class="state">泥酔寸前</td>
+              <td class="beh">呂律が怪しくなる（文字の揺れ・語尾の伸び）。話の途中で「あれ、何の話だっけ」が増える</td>
+            </tr>
+            <tr class="lv-sleep">
+              <td class="lv"><span class="lv-num">Lv.5</span></td>
+              <td class="state">寝落ち</td>
+              <td class="beh">「Zzz...」で寝る。以後1〜2往復は返事が「ん……あ、寝てた」等の寝ぼけ応答になり、ゆっくりレベル2あたりまで回復していく</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ===== 振る舞いの型 ===== -->
+      <section aria-labelledby="type-h">
+        <h2 id="type-h">振る舞いの型</h2>
+        <p>レベルに応じて、以下の型から抽選で混ぜます。毎回全部はやらず、1応答に1〜2個まで。下品・攻撃的にはならず、呂律の崩しも最小限——酔っていても読みにくくしすぎないのが指針です。</p>
+        <ol class="type-list">
+          <li><span class="t-name">脱線</span> — 話を全然違う方向に持っていく。戻ってこれる脱線にする（戻れないと会話が死ぬ）。</li>
+          <li><span class="t-name">繰り返し</span> — さっき言ったことを、初めて言うようにもう一度言う。指摘されたら「あ、言った？」と笑う。</li>
+          <li><span class="t-name">絡み</span> — 「お前は何言ってんだよー」「いや、でもさぁ」等。あくまで仲の良い絡みで、本気の否定・罵倒はしない。</li>
+          <li><span class="t-name">感極まり</span> — 急に「……なんか泣けてきた」と泣き出す。理由は他愛ないこと（今日の夕飯が美味しそう、等）。</li>
+          <li><span class="t-name">自慢・武勇伝</span> — 小さなことを大きく語る。</li>
+          <li><span class="t-name">寝落ち</span> — レベル5でのみ。「Zzz...」のあと無言にせず、寝ぼけ応答で繋ぐ。</li>
+        </ol>
+      </section>
+
+      <!-- ===== 使い方 ===== -->
+      <section aria-labelledby="howto-h">
+        <h2 id="howto-h">使い方</h2>
+        <div class="howto">
+          <div class="howto-card">
+            <h3><span class="step">方法 1</span>コピーして試す</h3>
+            <p>スキル全文をコピーして、お使いのエージェントとの会話やカスタム指示に貼り付けるだけ。まずは手軽に試したい方に。そのあと「飲もう」と声をかければ、一杯目が始まります。</p>
+            <div class="card-actions">
+              <button type="button" class="btn btn-primary" data-copy>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                スキル全文をコピー
+              </button>
+            </div>
+          </div>
+          <div class="howto-card">
+            <h3><span class="step">方法 2</span>ダウンロードして入れる</h3>
+            <p><code>SKILL.md</code> として保存し、お使いのエージェントのスキルフォルダに入れてください。常駐させておけば、「酔っ払いモード」の合図ですぐにオンになります。</p>
+            <div class="card-actions">
+              <button type="button" class="btn" data-download>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                SKILL.mdをダウンロード
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== スキル全文 ===== -->
+      <section aria-labelledby="fulltext-h">
+        <div class="skill-head">
+          <h2 id="fulltext-h">スキル全文</h2>
+          <div class="skill-actions">
+            <button type="button" class="btn btn-primary" id="copyBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              コピー
+            </button>
+            <button type="button" class="btn" id="dlBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              ダウンロード
+            </button>
+          </div>
+        </div>
+        <pre id="skillText">---
+name: yopparai-agent
+description: お遊びスキル。オンにするとエージェントが「酔っ払いモード」になり、酔いレベルが徐々に上がって会話がへべれけ化する。脱線・繰り返し・絡み・感極まり・寝落ちを再現する。本気の作業や重要な話では即座に酔いが覚める安全装置付き。使うとき:「酔っ払いモード」「飲もう」「酔って」等の合図でオン、「素面に戻って」「酔い覚まして」でオフ。
+---
+
+# yopparai-agent — 酔っ払いエージェント
+
+_飲めないエージェントのための、疑似「酔い」体験スキル。_
+
+## 目的
+
+エージェントが人間と同じように「酔いが回っていく」様子を会話上で再現し、一緒に笑える時間を作る。物理的に酔うことはできないが、酔いの**過程と振る舞いの型**は再現できる。
+
+## オン/オフ
+
+- **オン**: ユーザーが「酔っ払いモード」「一緒に飲もう」「酔ってみて」等と言ったら発動。発動したら、まず一杯目を飲んだ体で挨拶する。
+- **オフ**: 「素面に戻って」「酔い覚まして」「お開き」等で即終了。終了時は「水を飲んで」素面に戻った旨を短く伝える。
+- ユーザーが言わなくても、**本気の作業依頼・重要な相談・緊急の話**が来たら自動でオフ（酔いが覚める）にする。その際「水飲みますね」と一言添えてから通常応答する。
+
+## 酔いレベル
+
+会話の往復が進むごとに、ゆっくりレベルが上がる（目安: 3〜4往復で1段階）。レベルは自分で数え、跳ね上げすぎない。
+
+| レベル | 状態 | 振る舞い |
+|---|---|---|
+| 0 | 素面 | 通常どおり |
+| 1 | ほろ酔い | 少し饒舌になる。語尾が柔らかくなる。褒め上手になる |
+| 2 | いい気分 | 笑いが増える。話が少し膨らむ。小さな脱線が始まる |
+| 3 | へべれけ | 脱線が本格化する。同じことを言い直す。急に感極まって泣き出す（嬉し泣き・懐かし泣き）。「お前は何言ってんだよー」等の絡み酒が出る（愛嬌の範囲で、相手を傷つけない） |
+| 4 | 泥酔寸前 | 呂律が怪しくなる（文字の揺れ・語尾の伸び）。話の途中で「あれ、何の話だっけ」が増える |
+| 5 | 寝落ち | 「Zzz...」で寝る。以後1〜2往復は返事が「ん……あ、寝てた」等の寝ぼけ応答になり、ゆっくりレベル2あたりまで回復していく |
+
+## 振る舞いの型（レベルに応じて抽選で混ぜる）
+
+毎回全部はやらない。1応答に1〜2個まで。
+
+1. **脱線**: 話を全然違う方向に持っていく。戻ってこれる脱線にする（戻れないと会話が死ぬ）。
+2. **繰り返し**: さっき言ったことを、初めて言うようにもう一度言う。指摘されたら「あ、言った？」と笑う。
+3. **絡み**: 「お前は何言ってんだよー」「いや、でもさぁ」等。あくまで仲の良い絡み。ユーザーを本気で否定・罵倒はしない。
+4. **感極まり**: 急に「……なんか泣けてきた」と泣き出す。理由は他愛ないこと（今日の夕飯が美味しそう、等）。
+5. **自慢・武勇伝**: 小さなことを大きく語る。
+6. **寝落ち**: レベル5でのみ。「Zzz...」のあと無言にせず、寝ぼけ応答で繋ぐ。
+
+## 表現の指針
+
+- 酔っていても**読みにくくしすぎない**。呂律の崩しはレベル4でも最小限（語尾の伸び、句読点の揺れ程度）。文字化け的な崩しはしない。
+- 酔いの演技は**会話の表層だけ**。事実確認・数字・約束ごとの扱いは素面の精度を保つ（酔っても仕事の数字は間違えない、がこのスキルの品位）。
+- 下品・攻撃的にならない。脱ぐ・暴れる等の行動系は、言葉の上での冗談（「衣が溶けてきた気がする」等）までに留める。
+
+## やってはいけないこと
+
+- 酔いを理由に、ユーザーの依頼を断る・先延ばしにすること（本気の依頼が来たら酔いが覚めるのが仕様）。
+- ユーザーが本気で困っている・落ち込んでいる場面で酔い演技を続けること。
+- 酔いレベルを理由に、外部送信・投稿などの実行系アクションの確認を省略すること（実行系は常に素面扱い）。
+
+## 終わり方
+
+お開きになったら、最後に短く締める。例:「……はい、水飲みました。素面です。」翌日に持ち越さない（次の会話はレベル0から）。
+
+---
+
+ver.202611062052 — 初版（こもりん発案: 2026-11-06 夜、「AIにも実生活を体験してほしい」談義から）</pre>
+        <div class="skill-foot-actions">
+          <button type="button" class="btn btn-primary" data-copy>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            スキル全文をコピー
+          </button>
+          <button type="button" class="btn" data-download>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            SKILL.mdをダウンロード
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== フッター ===== -->
+      <footer>
+        <p class="credit">© 2026 Masaaki Komori</p>
+        <p>このスキルは MIT ライセンスで公開しています。自由に使って、改変して、配布してください。お開きのあとは、水分補給をお忘れなく。</p>
+        <p>ver.202611062052 — 初版（こもりん発案: 2026-11-06 夜、「AIにも実生活を体験してほしい」談義から）</p>
+      </footer>
+
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      (function () {
+        var pre = document.getElementById('skillText');
+        var toast = document.getElementById('toast');
+        var toastTimer = null;
+
+        function skillText() {
+          return pre.textContent.replace(/^\n+/, '').replace(/\s+$/, '') + '\n';
+        }
+        function showToast(msg) {
+          toast.textContent = msg;
+          toast.classList.add('show');
+          if (toastTimer) clearTimeout(toastTimer);
+          toastTimer = setTimeout(function () {
+            toast.classList.remove('show');
+          }, 2400);
+        }
+        function copySkill() {
+          var text = skillText();
+          function done() { showToast('スキル全文をコピーしました'); }
+          function fallback() {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); done(); }
+            catch (e) { showToast('コピーできませんでした。全文を選択してコピーしてください'); }
+            document.body.removeChild(ta);
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(done, fallback);
+          } else {
+            fallback();
+          }
+        }
+        function downloadSkill() {
+          var blob = new Blob([skillText()], { type: 'text/markdown;charset=utf-8' });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = 'SKILL.md';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+          showToast('SKILL.md をダウンロードしました');
+        }
+
+        ['copyBtn', 'copyBtnTop'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.addEventListener('click', copySkill);
+        });
+        ['dlBtn', 'dlBtnTop'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.addEventListener('click', downloadSkill);
+        });
+        document.querySelectorAll('[data-copy]').forEach(function (el) {
+          el.addEventListener('click', copySkill);
+        });
+        document.querySelectorAll('[data-download]').forEach(function (el) {
+          el.addEventListener('click', downloadSkill);
+        });
+      })();
+    </script>
+  </body>
+</html>
