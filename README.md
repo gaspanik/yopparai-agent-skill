@@ -4,6 +4,10 @@
 
 「飲もう」の合図でエージェントが酔っ払いモードに入り、会話の往復ごとに酔いが回っていきます。ほろ酔い → いい気分 → へべれけ → 泥酔寸前 → 寝落ち（Zzz...）。脱線・繰り返し・絡み酒・感極まり・寝落ちを再現しますが、本気の作業依頼や重要な話が来たら自動で酔いが覚める安全装置付きです。
 
+## 紹介ページ
+
+https://muse.ai/s/yopparai-agent-xfu6xpxp2gyaxhh/8_WZGqumZbVxnm6UdHtuoQfDaYxcW1vvMqJhPKNhdYk
+
 ## 使い方
 
 1. `SKILL.md` をダウンロードする
